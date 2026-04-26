@@ -1,70 +1,125 @@
-# Getting Started with Create React App
+# 🎥 YouTube Clone – Modern Responsive Video Streaming App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A fully responsive **YouTube-inspired video streaming web application** built using **React.js, Redux, Tailwind CSS, and React Router**.
 
-## Available Scripts
+This project replicates the core user experience of YouTube, including **video browsing, search functionality, responsive sidebar navigation, video watch page, search suggestions, category filters, and mobile-friendly UI**.
 
-In the project directory, you can run:
+Designed with **clean architecture, reusable components, state management, and production-ready responsiveness**, this project demonstrates strong frontend development skills.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🚀 Live Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 🔍 **Smart Search Functionality**
+  - Search videos dynamically
+  - Displays real-time search results
+  - Search suggestions / history dropdown
 
-### `npm test`
+- 🎬 **Video Feed**
+  - Popular and trending videos
+  - Responsive video grid layout
+  - Clear thumbnails with fallback handling
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 📱 **Fully Responsive Design**
+  - Mobile
+  - Tablet
+  - Desktop
+  - YouTube-like sidebar experience
 
-### `npm run build`
+- 📂 **Sidebar Navigation**
+  - Home
+  - Trending
+  - Music
+  - Live
+  - Gaming
+  - News
+  - Sports
+  - Learning
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- 🎥 **Watch Page**
+  - Individual video playback
+  - Recommended videos
+  - Responsive layout
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- ⚡ **Redux State Management**
+  - Sidebar open / close state
+  - Search suggestion caching
+  - Global app state handling
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- 🎨 **Modern UI**
+  - Tailwind CSS styling
+  - Smooth transitions
+  - Professional card layouts
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🛠️ Tech Stack
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Frontend
+- **React.js**
+- **Redux Toolkit**
+- **React Router DOM**
+- **Tailwind CSS**
+- **Font Awesome Icons**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### APIs
+- **YouTube Data API v3**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### State Management
+- **Redux Store**
+- **Slices**
+- **Search cache**
+- **Sidebar state**
 
-## Learn More
+- 📸 Core Functionalities Implemented
+Search
+Dynamic API-based search
+Query-based routing
+Search results rendering
+Routing
+Home page
+Search results page
+Watch page
+Responsive Sidebar
+Collapsible menu
+Mobile overlay
+Outside click close functionality
+UI Enhancements
+Loading shimmer effect
+Hover animations
+Active route highlighting
+💡 What I Learned
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Through this project, I strengthened my skills in:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+React component design
+Redux state flow
+API handling with async fetch
+Responsive layouts
+Routing logic
+UI debugging
+Production-level frontend structure
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🏗️ Project Architecture
 
-### Analyzing the Bundle Size
+```bash
+src/
+│
+├── components/
+│   ├── Header.js
+│   ├── Sidebar.js
+│   ├── VideoCard.js
+│   ├── SearchResults.js
+│   ├── Shimmer.js
+│
+├── utils/
+│   ├── constants.js
+│   ├── appSlice.js
+│   ├── searchSlice.js
+│   └── store.js
+│
+├── App.js
+└── index.js
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
