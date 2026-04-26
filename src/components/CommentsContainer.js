@@ -1,185 +1,281 @@
-import React from "react";
+import React, { useState } from "react";
 
-const commentdata = [
-    {
-        name: "Narasimha",
-        text: "Lorem ipsum dolor sit amet, consectetur adip",
+const initialComments = [
+  {
+    id: 1,
+    name: "Narasimha",
+    text: "This video is amazing 🔥",
+    replies: [
+      {
+        id: 2,
+        name: "Nani",
+        text: "Yes bro totally agree!",
         replies: [],
-    },
-    {
-        name: "Narasimha",
-        text: "Lorem ipsum dolor sit amet, consectetur adip",
-        replies: [
-            {
-                name: "Narasimha",
-                text: "Lorem ipsum dolor sit amet, consectetur adip",
-                replies: [],
-            },
-            {
-                name: "Narasimha",
-                text: "Lorem ipsum dolor sit amet, consectetur adip",
-                replies: [
-                    {
-                        name: "Narasimha",
-                        text: "Lorem ipsum dolor sit amet, consectetur adip",
-                        replies: [
-                            {
-                                name: "Narasimha",
-                                text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                replies: [
-                                    {
-                                        name: "Narasimha",
-                                        text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                        replies: [
-                                            {
-                                                name: "Narasimha",
-                                                text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                                replies: [
-                                                    {
-                                                        name: "Narasimha",
-                                                        text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                                        replies: [
-                                                            {
-                                                                name: "Narasimha",
-                                                                text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                                                replies: [
-                                                                    {
-                                                                        name: "Narasimha",
-                                                                        text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                                                        replies:
-                                                                            [
-                                                                                {
-                                                                                    name: "Narasimha",
-                                                                                    text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                                                                    replies:
-                                                                                        [],
-                                                                                },
-                                                                            ],
-                                                                    },
-                                                                ],
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        name: "Narasimha",
-                                        text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                        replies: [],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
-    },
-
-    {
-        name: "Narasimha",
-        text: "Lorem ipsum dolor sit amet, consectetur adip",
-        replies: [],
-    },
-    {
-        name: "Narasimha",
-        text: "Lorem ipsum dolor sit amet, consectetur adip",
-        replies: [
-            {
-                name: "Narasimha",
-                text: "Lorem ipsum dolor sit amet, consectetur adip",
-                replies: [],
-            },
-            {
-                name: "Narasimha",
-                text: "Lorem ipsum dolor sit amet, consectetur adip",
-                replies: [
-                    {
-                        name: "Narasimha",
-                        text: "Lorem ipsum dolor sit amet, consectetur adip",
-                        replies: [
-                            {
-                                name: "Narasimha",
-                                text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                replies: [
-                                    {
-                                        name: "Narasimha",
-                                        text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                        replies: [
-                                            {
-                                                name: "Narasimha",
-                                                text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                                replies: [],
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        name: "Narasimha",
-                                        text: "Lorem ipsum dolor sit amet, consectetur adip",
-                                        replies: [],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        name: "Narasimha",
-        text: "Lorem ipsum dolor sit amet, consectetur adip",
-        replies: [],
-    },
-    {
-        name: "Narasimha",
-        text: "Lorem ipsum dolor sit amet, consectetur adip",
-        replies: [],
-    },
-    {
-        name: "Narasimha",
-        text: "Lorem ipsum dolor sit amet, consectetur adip",
-        replies: [],
-    },
+      },
+    ],
+  },
+  {
+    id: 3,
+    name: "Thanmai",
+    text: "Very helpful content 🙌",
+    replies: [],
+  },
 ];
 
-const Comment = ({ data }) => {
-    const { name, text, replies } = data;
 
-    return (
-        <div className="flex shadow-sm my-2 bg-gray-100 p-2 rounded">
-            <img
-                className="w-8 h-8"
-                src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
-                alt="user-logo"
+// 🔥 ADD REPLY
+const addReply = (comments, parentId, reply) => {
+  return comments.map((comment) => {
+    if (comment.id === parentId) {
+      return {
+        ...comment,
+        replies: [...comment.replies, reply],
+      };
+    }
+    return {
+      ...comment,
+      replies: addReply(comment.replies, parentId, reply),
+    };
+  });
+};
+
+
+// 🔥 DELETE COMMENT (recursive)
+const deleteComment = (comments, id) => {
+  return comments
+    .filter((comment) => comment.id !== id)
+    .map((comment) => ({
+      ...comment,
+      replies: deleteComment(comment.replies, id),
+    }));
+};
+
+
+// 🔥 EDIT COMMENT
+const editComment = (comments, id, newText) => {
+  return comments.map((comment) => {
+    if (comment.id === id) {
+      return { ...comment, text: newText };
+    }
+    return {
+      ...comment,
+      replies: editComment(comment.replies, id, newText),
+    };
+  });
+};
+
+
+// 🔥 SINGLE COMMENT
+const Comment = ({ data, onReply, onDelete, onEdit }) => {
+  const { id, name, text } = data;
+
+  const [liked, setLiked] = useState(false);
+  const [showReply, setShowReply] = useState(false);
+  const [replyText, setReplyText] = useState("");
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(text);
+
+  const handleReply = () => {
+    if (!replyText.trim()) return;
+
+    onReply(id, {
+      id: Date.now(),
+      name: "You",
+      text: replyText,
+      replies: [],
+    });
+
+    setReplyText("");
+    setShowReply(false);
+  };
+
+  const handleEdit = () => {
+    if (!editText.trim()) return;
+    onEdit(id, editText);
+    setIsEditing(false);
+  };
+
+  return (
+    <div className="flex gap-3 my-3">
+      
+      {/* Avatar */}
+      <img
+        className="w-9 h-9 rounded-full"
+        src={`https://i.pravatar.cc/100?u=${name}`}
+        alt="user"
+      />
+
+      <div className="flex flex-col w-full">
+        
+        <p className="text-sm font-semibold">{name}</p>
+
+        {/* 🔥 EDIT MODE */}
+        {isEditing ? (
+          <div className="flex gap-2 mt-1">
+            <input
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              className="border-b outline-none text-sm w-full"
             />
-            <div className="px-3 ">
-                <p className="font-bold"> {name} </p> <p> {text} </p>{" "}
-            </div>{" "}
+            <button
+              onClick={handleEdit}
+              className="text-blue-600 text-sm"
+            >
+              Save
+            </button>
+          </div>
+        ) : (
+          <p className="text-sm text-gray-700 mt-1">
+            {text}
+          </p>
+        )}
+
+        {/* Actions */}
+        <div className="flex gap-4 mt-2 text-sm text-gray-500">
+          
+          <button
+            onClick={() => setLiked(!liked)}
+            className={liked ? "text-blue-600 font-semibold" : ""}
+          >
+            👍 {liked ? "Liked" : "Like"}
+          </button>
+
+          <button onClick={() => setShowReply(!showReply)}>
+            💬 Reply
+          </button>
+
+          <button onClick={() => setIsEditing(!isEditing)}>
+            ✏️ Edit
+          </button>
+
+          <button
+            onClick={() => onDelete(id)}
+            className="text-red-500"
+          >
+            🗑 Delete
+          </button>
         </div>
-    );
+
+        {/* Reply Input */}
+        {showReply && (
+          <div className="flex gap-2 mt-2">
+            <input
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Write a reply..."
+              className="border-b outline-none text-sm w-full"
+            />
+            <button
+              onClick={handleReply}
+              className="text-blue-600 text-sm"
+            >
+              Post
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
-const CommentList = ({ comments }) => {
-    return comments.map((comment, index) => (
-        <div key={index}>
-            <Comment data={comment} />{" "}
-            <div className="pl-5 border border-l-black ml-5">
-                <CommentList comments={comment.replies} />{" "}
-            </div>{" "}
+
+// 🔥 COMMENT LIST
+const CommentList = ({ comments, onReply, onDelete, onEdit }) => {
+  return comments.map((comment) => (
+    <div key={comment.id}>
+      
+      <Comment
+        data={comment}
+        onReply={onReply}
+        onDelete={onDelete}
+        onEdit={onEdit}
+      />
+
+      {comment.replies.length > 0 && (
+        <div className="ml-8 pl-4 border-l border-gray-300">
+          <CommentList
+            comments={comment.replies}
+            onReply={onReply}
+            onDelete={onDelete}
+            onEdit={onEdit}
+          />
         </div>
-    ));
+      )}
+    </div>
+  ));
 };
 
+
+// 🔥 MAIN
 const CommentsContainer = () => {
-    return (
-        <div>
-            <p className="text-xl p-2 m-2 font-bold border-b-2"> Comments </p>{" "}
-            <CommentList comments={commentdata} />{" "}
-        </div>
-    );
+  const [comments, setComments] = useState(initialComments);
+  const [newComment, setNewComment] = useState("");
+
+  const handleReply = (parentId, reply) => {
+    setComments(addReply(comments, parentId, reply));
+  };
+
+  const handleDelete = (id) => {
+    setComments(deleteComment(comments, id));
+  };
+
+  const handleEdit = (id, text) => {
+    setComments(editComment(comments, id, text));
+  };
+
+  const handleAddComment = () => {
+    if (!newComment.trim()) return;
+
+    const newEntry = {
+      id: Date.now(),
+      name: "You",
+      text: newComment,
+      replies: [],
+    };
+
+    setComments([newEntry, ...comments]);
+    setNewComment("");
+  };
+
+  return (
+    <div className="mt-6">
+      
+      <h2 className="text-lg sm:text-xl font-semibold mb-4">
+        💬 Comments
+      </h2>
+
+      {/* Add comment */}
+      <div className="flex gap-3 sm:gap-3 mb-6">
+        <img
+          className="w-9 h-9 sm:w-9 sm:h-9 rounded-full"
+          src="https://i.pravatar.cc/100"
+          alt="user"
+        />
+        <input
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleAddComment()}
+          placeholder="Add a comment..."
+          className="w-full border-b outline-none pb-1 text-sm sm:text-sm"
+        />
+        <button
+          onClick={handleAddComment}
+          className="text-blue-600 text-xs sm:text-sm"
+        >
+          Post
+        </button>
+      </div>
+
+      {/* Comments */}
+      <CommentList
+        comments={comments}
+        onReply={handleReply}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+      />
+    </div>
+  );
 };
 
 export default CommentsContainer;

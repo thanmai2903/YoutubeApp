@@ -1,12 +1,30 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Button = ({ name }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/results?search_query=${name}`);
+  };
+
   return (
-    <div>
-      <button className="rounded-lg bg-[#f5f5f5] font-semibold hover:bg-[#eaeaea] text-black mr-[12px] height-[32px]  whitespace-nowrap flex  align-middle justify-center px-[12px] py-[8px] text-[13px] text-center">
-        {name}
-      </button>
-    </div>
+    <button
+      onClick={handleClick}
+      className="
+        whitespace-nowrap
+        px-3 sm:px-4 
+        py-1.5 sm:py-2
+        text-xs sm:text-sm md:text-base
+        bg-gray-100 
+        rounded-full 
+        hover:bg-gray-200 
+        font-medium 
+        transition
+      "
+    >
+      {name}
+    </button>
   );
 };
 

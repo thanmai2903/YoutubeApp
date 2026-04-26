@@ -1,6 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
@@ -16,241 +16,101 @@ import {
   faQuestionCircle,
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
+import { toggleMenu } from "../utils/appSlice"; // adjust path if needed
+
+const menuItems = [
+  { name: "Home", icon: faHome, path: "/" },
+  { name: "Trending", icon: faFireFlameCurved, path: "/results?search_query=trending" },
+  { name: "Music", icon: faMusic, path: "/results?search_query=music" },
+  { name: "Live", icon: faTv, path: "/results?search_query=live" },
+  { name: "Gaming", icon: faHeadset, path: "/results?search_query=gaming" },
+  { name: "News", icon: faNewspaper, path: "/results?search_query=news" },
+  { name: "Sports", icon: faVolleyballBall, path: "/results?search_query=sports" },
+  { name: "Learning", icon: faLightbulb, path: "/results?search_query=learning" },
+];
+
+const extraItems = [
+  { name: "Settings", icon: faGear, path: "/settings" },
+  { name: "History", icon: faFlag, path: "/history" },
+  { name: "Help", icon: faQuestionCircle, path: "/help" },
+  { name: "Feedback", icon: faMessage, path: "/feedback" },
+];
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
-
-  //Early return
-  if (!isMenuOpen) return <ClosedSidebar />;
+  const location = useLocation();
 
   return (
     <>
-      <div className="mr-48 top-0">
-        <div className="w-44 h-screen z-10 fixed  border-r-2 mt-0 ">
-          <ul>
-            <li className=" py-2">
-              <Link to="/">
-                <div className="nav mx-2 py-2 rounded-lg flex bg-slate-200 justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer">
-                  <div className="flex flex-col pl-1 justify-center">
-                    <FontAwesomeIcon icon={faHome} />
-                  </div>
+      {/* Mobile / tablet overlay */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-40 md:hidden"
+          onClick={() => dispatch(toggleMenu())}
+        ></div>
+      )}
+
+      <aside
+        className={`fixed top-16 left-0 h-full z-50 bg-white transition-all duration-300 shadow-sm
+        ${isMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+        ${isMenuOpen ? "w-56" : "w-20"}
+        block`}
+      >
+        <div className="overflow-y-auto h-full px-2 py-3">
+          {menuItems.map((item) => (
+            <SidebarItem
+              key={item.name}
+              item={item}
+              expanded={isMenuOpen}
+            />
+          ))}
+
+          <hr className="my-4" />
+
+          {extraItems.map((item) => {
+            const active = location.pathname === item.path;
+
+            return (
+              <Link key={item.name} to={item.path}>
+                <div
+                  className={`flex items-center gap-4 px-3 py-3 rounded-xl cursor-pointer
+                  ${active ? "bg-gray-200" : "hover:bg-gray-100"}`}
+                >
+                  <FontAwesomeIcon icon={item.icon} />
                   {isMenuOpen && (
-                    <span className="text-sm pl-3 font-semibold">Home</span>
+                    <span className="text-sm font-medium">
+                      {item.name}
+                    </span>
                   )}
-                  {/* <span className="text-sm pl-3 font-semibold">Home</span> */}
                 </div>
               </Link>
-            </li>
-            <li className=" py-1">
-              <div className="nav mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faFireFlameCurved} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">Trending</span>
-              </div>
-            </li>
-            <li className=" py-1">
-              <div className="nav mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-300 hover:rounded-lg cursor-pointer">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faMusic} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">Music</span>
-              </div>
-            </li>
-
-            <li className=" py-1">
-              <div className="mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faTv} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">Live</span>
-              </div>
-            </li>
-
-            <li className=" py-1">
-              <div className="mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faHeadset} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">Gaming</span>
-              </div>
-            </li>
-            <li className=" py-1">
-              <div className="mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faNewspaper} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">News</span>
-              </div>
-            </li>
-
-            <li className=" py-1">
-              <div className="mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faVolleyballBall} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">Sports</span>
-              </div>
-            </li>
-
-            <li className=" py-1">
-              <div className="mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faLightbulb} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">Learning</span>
-              </div>
-            </li>
-            <div className="mx-3 p-[1px] rounded-full bg-slate-300"></div>
-            <li className=" py-1">
-              <div className="mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer ">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faGear} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">Settings</span>
-              </div>
-            </li>
-
-            <li className=" py-1">
-              <div className="mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer ">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faFlag} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">
-                  Report History
-                </span>
-              </div>
-            </li>
-
-            <li className=" py-1">
-              <div className="mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer ">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faQuestionCircle} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">Help</span>
-              </div>
-            </li>
-
-            <li className=" py-1">
-              <div className="mx-2 py-2 rounded-lg flex justify-start hover:bg-slate-200 hover:rounded-lg cursor-pointer">
-                <div className="flex flex-col pl-1 justify-center">
-                  <FontAwesomeIcon icon={faMessage} />
-                </div>
-                <span className="text-sm pl-3 font-semibold">
-                  Send Feedback
-                </span>
-              </div>
-            </li>
-
-            <div className="mx-3 p-[1px] rounded-full bg-slate-300"></div>
-          </ul>
+            );
+          })}
         </div>
-      </div>
+      </aside>
     </>
   );
 };
 
-const ClosedSidebar = () => {
+const SidebarItem = ({ item, expanded }) => {
+  const location = useLocation();
+
+  const active =
+    location.pathname + location.search === item.path;
+
   return (
-    <>
-      <div className="mr-24">
-        <div className="w-14 h-screen z-10 fixed mt-14 border-r-2 ">
-          <ul>
-            <li className=" py-1 mt-1">
-              <Link to="/">
-                <div className=" flex justify-center">
-                  <div className="nav hover:bg-slate-300 bg-slate-300 px-3 py-2 rounded-full">
-                    <FontAwesomeIcon icon={faHome} />
-                  </div>
-                </div>
-              </Link>
-            </li>
-            <li className=" pt-2">
-              <Link to={"/results?search_query=trending"} active>
-                <div className=" flex justify-center">
-                  <div className="nav px-4 py-2 hover:bg-slate-300  rounded-full">
-                    <FontAwesomeIcon icon={faFireFlameCurved} />
-                  </div>
-                </div>
-              </Link>
-            </li>
-            <li className=" py-1">
-              <Link to={"/results?search_query=music"}>
-                <div className=" flex justify-center">
-                  <div className="nav px-3 py-2 hover:bg-slate-300 rounded-full">
-                    <FontAwesomeIcon icon={faMusic} />
-                  </div>
-                </div>
-              </Link>
-            </li>
-            <li className=" py-1">
-              <div className=" flex justify-center">
-                <div className="px-3 py-1 rounded-full">
-                  <FontAwesomeIcon icon={faTv} />
-                </div>
-              </div>
-            </li>
-            <li className=" py-2">
-              <div className=" flex justify-center">
-                <div className="px-3 py-1 rounded-full">
-                  <FontAwesomeIcon icon={faHeadset} />
-                </div>
-              </div>
-            </li>
-            <li className=" py-1">
-              <div className=" flex justify-center">
-                <div className="px-3 py-1 rounded-full">
-                  <FontAwesomeIcon icon={faNewspaper} />
-                </div>
-              </div>
-            </li>
-            <li className=" py-1">
-              <div className=" flex justify-center">
-                <div className="px-3 py-1 rounded-full">
-                  <FontAwesomeIcon icon={faVolleyballBall} />
-                </div>
-              </div>
-            </li>
-            <li className=" py-2">
-              <div className=" flex justify-center">
-                <div className="px-3 py-1 rounded-full">
-                  <FontAwesomeIcon icon={faLightbulb} />
-                </div>
-              </div>
-            </li>
-            <div className="mx-3 p-[1px] rounded-full bg-slate-300"></div>
-            <li className=" pt-1">
-              <div className=" flex justify-center">
-                <div className="px-3 py-1 rounded-full">
-                  <FontAwesomeIcon icon={faGear} />
-                </div>
-              </div>
-            </li>
-            <li className=" py-1">
-              <div className=" flex justify-center">
-                <div className="px-3 py-1 rounded-full">
-                  <FontAwesomeIcon icon={faFlag} />
-                </div>
-              </div>
-            </li>
-            <li className=" py-1">
-              <div className=" flex justify-center">
-                <div className="px-3 py-1 rounded-full">
-                  <FontAwesomeIcon icon={faQuestionCircle} />
-                </div>
-              </div>
-            </li>
-            <li className=" py-1">
-              <div className=" flex justify-center">
-                <div className="px-3 py-1 rounded-full">
-                  <FontAwesomeIcon icon={faMessage} />
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
+    <Link to={item.path}>
+      <div
+        className={`flex items-center gap-4 px-3 py-3 rounded-xl cursor-pointer transition
+        ${active ? "bg-gray-200" : "hover:bg-gray-100"}`}
+      >
+        <FontAwesomeIcon icon={item.icon} />
+        {expanded && (
+          <span className="text-sm font-medium">{item.name}</span>
+        )}
       </div>
-    </>
+    </Link>
   );
 };
 

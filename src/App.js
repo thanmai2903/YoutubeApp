@@ -1,11 +1,15 @@
 import "./App.css";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Body from "./components/Body";
-import Head from "./components/Head";
-import MainContainer from "./components/MainContainer";
 import store from "./utils/store";
+import Body from "./components/Body";
+import MainContainer from "./components/MainContainer";
 import WatchPage from "./components/WatchPage";
+import SearchResults from "./components/SearchResults";
+import Settings from "./components/Settings";
+import Help from "./components/Help";
+import Feedback from "./components/Feedback";
+import History from "./components/History";
 
 const appRouter = createBrowserRouter([
   {
@@ -13,13 +17,22 @@ const appRouter = createBrowserRouter([
     element: <Body />,
     children: [
       {
-        path: "/",
+        index: true,
         element: <MainContainer />,
       },
       {
-        path: "/watch",
+        path: "watch",
         element: <WatchPage />,
       },
+      
+      {
+  path: "results",
+  element: <SearchResults />,
+},
+ { path: "settings", element: <Settings /> },
+      { path: "help", element: <Help /> },
+      { path: "feedback", element: <Feedback /> },
+      { path: "history", element: <History /> },
     ],
   },
 ]);
@@ -27,20 +40,7 @@ const appRouter = createBrowserRouter([
 function App() {
   return (
     <Provider store={store}>
-      <div>
-        <Head />
-        <RouterProvider router={appRouter} />
-        {/**
-         * Head
-         * Body
-         *  Sidebar
-         *   MenuItems
-         *  MainContainer
-         *   ButtonList
-         *   Video Container
-         *     VideoCard
-         */}
-      </div>
+      <RouterProvider router={appRouter} />
     </Provider>
   );
 }
