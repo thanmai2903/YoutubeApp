@@ -4,11 +4,11 @@ import VideoCard from "./VideoCard";
 import Shimmer from "./Shimmer"; 
 
 import { YOUTUBE_SEARCH_RESULTS_API } from "../utils/constants"; 
-const SearchResults = () => { const [searchParams] = useSearchParams(); 
+const SearchResults = () => { 
+  const [searchParams] = useSearchParams(); 
   const query = searchParams.get("search_query"); 
   const [videos, setVideos] = useState([]); 
   const [loading, setLoading] = useState(true); 
-  const [searchParams] = useSearchParams();
 
 
  const fetchSearchResults = useCallback(async () => {
